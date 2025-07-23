@@ -282,7 +282,7 @@ MIT License - see LICENSE file for details
 
 - Report bugs via GitHub Issues
 - Feature requests welcome
-- Email: [your-email] (update this)
+- 📧 Email: [ridwan2bus@gmail.com](mailto:ridwan2bus@gmail.com)
 
 ## 🙏 Acknowledgments
 
