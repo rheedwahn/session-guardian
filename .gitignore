@@ -23,9 +23,14 @@ build/
 *.pem
 
 # IDE and Editor files
+# VS Code - ignore personal settings but keep shared workspace config
 .vscode/settings.json
 .vscode/launch.json
-.vscode/extensions.json
+# Keep these VS Code files for team collaboration:
+# .vscode/tasks.json (shared build tasks)
+# .vscode/extensions.json (recommended extensions)
+
+# Other IDEs
 .idea/
 *.swp
 *.swo
@@ -157,7 +162,7 @@ tracking-data/
 *.cpuprofile
 *.heapprofile
 
-# VSCode workspace settings (project-specific)
+# VSCode workspace settings (personal preferences only)
 .vscode/settings.json
 
 # JetBrains IDEs
