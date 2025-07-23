@@ -8,6 +8,7 @@ const MAX_SESSIONS = 50; // Maximum number of sessions to keep
 class SessionManager {
   constructor() {
     this.autoSaveTimer = null;
+    this.updateTimer = null;
     this.init();
   }
 
@@ -24,7 +25,12 @@ class SessionManager {
     // Listen for window/tab changes
     chrome.tabs.onCreated.addListener(() => this.onTabChange());
     chrome.tabs.onRemoved.addListener(() => this.onTabChange());
-    chrome.tabs.onUpdated.addListener(() => this.onTabChange());
+    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+      // Only update on significant changes
+      if (changeInfo.url || changeInfo.title || changeInfo.status === 'complete') {
+        this.onTabChange();
+      }
+    });
     chrome.windows.onCreated.addListener(() => this.onWindowChange());
     chrome.windows.onRemoved.addListener(() => this.onWindowChange());
   }
@@ -281,12 +287,54 @@ class SessionManager {
   }
 
   onTabChange() {
-    // Debounced auto-save on tab changes (optional)
-    // Could implement immediate save on significant changes
+    // Debounced update to auto-save session when tabs change
+    this.debouncedUpdateAutoSave();
   }
 
   onWindowChange() {
-    // Debounced auto-save on window changes (optional)
+    // Debounced update to auto-save session when windows change
+    this.debouncedUpdateAutoSave();
+  }
+
+  debouncedUpdateAutoSave() {
+    // Clear existing timer
+    if (this.updateTimer) {
+      clearTimeout(this.updateTimer);
+    }
+    
+    // Set new timer to update auto-save after 2 seconds of inactivity
+    this.updateTimer = setTimeout(async () => {
+      try {
+        await this.updateAutoSaveSession();
+      } catch (error) {
+        console.error('Session Guardian: Failed to update auto-save:', error);
+      }
+    }, 2000);
+  }
+
+  async updateAutoSaveSession() {
+    // Update the auto-save session with current state
+    const sessions = await this.getAllSessions();
+    const autoSaveIndex = sessions.findIndex(s => s.type === 'auto');
+    
+    if (autoSaveIndex !== -1) {
+      // Update existing auto-save session
+      const windows = await chrome.windows.getAll({ populate: true });
+      const updatedSession = await this.createSessionData(windows, 'Auto-save', true);
+      updatedSession.id = sessions[autoSaveIndex].id; // Keep same ID
+      
+      sessions[autoSaveIndex] = updatedSession;
+      await this.saveSessions(sessions);
+      
+      console.log('Session Guardian: Auto-save session updated');
+    }
+  }
+
+  async handleScrollUpdate(scrollData) {
+    // Store scroll position for later use in session updates
+    // This could be enhanced to immediately update the auto-save session
+    // For now, we rely on the debounced update mechanism
+    this.debouncedUpdateAutoSave();
   }
 }
 
@@ -315,6 +363,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           
         case 'deleteSession':
           await sessionManager.deleteSession(request.sessionId);
+          sendResponse({ success: true });
+          break;
+          
+        case 'updateScrollPosition':
+          // Handle scroll position updates from content script
+          await sessionManager.handleScrollUpdate(request.data);
           sendResponse({ success: true });
           break;
           

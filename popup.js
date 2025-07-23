@@ -5,12 +5,14 @@ class PopupManager {
   constructor() {
     this.sessions = [];
     this.isLoading = false;
+    this.refreshTimer = null;
     this.init();
   }
 
   init() {
     this.bindEvents();
     this.loadSessions();
+    this.startAutoRefresh();
   }
 
   bindEvents() {
@@ -109,9 +111,21 @@ class PopupManager {
     const container = document.getElementById('sessions-container');
     const emptyState = document.getElementById('empty-state');
     const sessionCount = document.getElementById('session-count');
+    const lastUpdate = document.getElementById('last-update');
     
     // Update session count
     sessionCount.textContent = `(${this.sessions.length})`;
+    
+    // Show last update time for auto-save session
+    const autoSaveSession = this.sessions.find(s => s.type === 'auto');
+    if (autoSaveSession) {
+      const updateTime = new Date(autoSaveSession.timestamp).toLocaleTimeString();
+      lastUpdate.textContent = `Auto-save: ${updateTime}`;
+      lastUpdate.style.color = '#34a853';
+    } else {
+      lastUpdate.textContent = 'No auto-save yet';
+      lastUpdate.style.color = '#999';
+    }
     
     if (this.sessions.length === 0) {
       container.classList.add('hidden');
@@ -293,6 +307,22 @@ class PopupManager {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+  }
+
+  startAutoRefresh() {
+    // Refresh the display every 30 seconds to show current session state
+    this.refreshTimer = setInterval(() => {
+      if (!this.isLoading) {
+        this.loadSessions();
+      }
+    }, 30000);
+    
+    // Clear timer when popup is closed
+    window.addEventListener('beforeunload', () => {
+      if (this.refreshTimer) {
+        clearInterval(this.refreshTimer);
+      }
+    });
   }
 
   sendMessage(message) {

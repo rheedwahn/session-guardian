@@ -1,26 +1,35 @@
-# Session Guardian - Icon Placeholder
+# Session Guardian - Icons
 
-This directory should contain the following icon files:
-- icon16.png (16x16 pixels)
-- icon32.png (32x32 pixels)  
-- icon48.png (48x48 pixels)
-- icon128.png (128x128 pixels)
+This directory contains the icon files for the Session Guardian Chrome extension:
 
-## Icon Requirements
+- ✅ icon16.png (16x16 pixels) - Toolbar icon
+- ✅ icon32.png (32x32 pixels) - Extension management
+- ✅ icon48.png (48x48 pixels) - Extension details
+- ✅ icon128.png (128x128 pixels) - Chrome Web Store
+
+## Current Icon Design
+
 - **Style**: Modern, clean design representing session/tab management
-- **Colors**: Blue theme (#4285f4) with white/transparent background
-- **Content**: Suggest tabs, windows, or save/restore symbols
+- **Colors**: Google Blue (#4285f4) with white accents on transparent background
+- **Elements**:
+  - Three browser tabs (representing saved sessions)
+  - Shield with checkmark (representing protection/recovery)
 - **Format**: PNG with transparency support
 
-## Recommended Tools
-- Figma, Sketch, or Adobe Illustrator for vector design
-- Export to PNG at exact pixel dimensions
-- Ensure icons are crisp at all sizes
+## Icon Features
 
-## Temporary Solution
-Until custom icons are created, you can:
-1. Use Chrome's default extension icon (auto-generated)
-2. Find placeholder icons from icon libraries
-3. Create simple icons using online tools
+- Scalable design that works at all required sizes
+- Clear visual metaphor for session saving and restoration
+- Professional appearance suitable for Chrome Web Store
+- Consistent with modern Chrome extension design patterns
 
-The extension will work without custom icons, but they improve user experience.
+## Future Improvements
+
+If you want to customize the icons further, consider:
+
+- Professional design tools (Figma, Sketch, Adobe Illustrator)
+- More detailed graphics for larger sizes
+- Brand-specific color schemes
+- Animation support for dynamic states
+
+The current icons provide full functionality and professional appearance for the extension.
