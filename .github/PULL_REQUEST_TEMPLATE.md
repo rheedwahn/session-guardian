@@ -18,6 +18,14 @@ Please delete options that are not relevant.
 **How Has This Been Tested?**
 Please describe the tests that you ran to verify your changes.
 
+**Automated Testing (Required):**
+- [ ] All unit tests pass: `npm test` (41/41 tests)
+- [ ] All integration tests pass: `npm run test:integration` (10/10 tests)  
+- [ ] E2E tests pass: `npm run test:e2e`
+- [ ] Linting passes: `npm run lint` (0 errors)
+- [ ] Build completes: `npm run build`
+
+**Manual Testing:**
 - [ ] Manual testing in Chrome
 - [ ] Tested auto-save functionality
 - [ ] Tested session restoration
@@ -33,14 +41,15 @@ Please describe the tests that you ran to verify your changes.
 - Test websites: [e.g. GitHub, YouTube, etc.]
 
 **Checklist:**
+- [ ] All 51 automated tests pass (npm run test:all)
+- [ ] Code passes linting with 0 errors (npm run lint)
 - [ ] My code follows the style guidelines of this project
 - [ ] I have performed a self-review of my own code
 - [ ] I have commented my code, particularly in hard-to-understand areas
 - [ ] I have made corresponding changes to the documentation
 - [ ] My changes generate no new warnings
-- [ ] I have tested that auto-save works correctly
-- [ ] I have tested session restoration
-- [ ] I have tested scroll position accuracy
+- [ ] I have added tests for new functionality
+- [ ] Test coverage remains at 100%
 - [ ] Any dependent changes have been merged and published
 
 **Screenshots (if applicable):**

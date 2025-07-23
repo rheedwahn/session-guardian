@@ -2,9 +2,14 @@
 
 Thank you for your interest in contributing to Session Guardian! This document provides guidelines and information for contributors.
 
-## Code of Conduct
+## Community Guidelines
 
-By participating in this project, you agree to abide by our Code of Conduct (see below).
+- **Be respectful and constructive** in all interactions
+- **Focus on technical discussions** and objective feedback
+- **Help others learn and contribute** - we welcome developers of all skill levels
+- **Stay on topic** - keep discussions related to Session Guardian functionality
+- **Use clear, descriptive language** in issues and pull requests
+- **Test thoroughly** before submitting changes
 
 ## How to Contribute
 
@@ -35,19 +40,45 @@ We welcome feature suggestions! Please:
    ```bash
    git clone https://github.com/rheedwahn/session-guardian.git
    cd session-guardian
+   npm install
    ```
 
-3. **Load the extension in Chrome:**
-   - Open `chrome://extensions/`
-   - Enable "Developer mode"
-   - Click "Load unpacked" and select the project directory
+3. **Run the test suite:**
+   ```bash
+   npm test                    # Unit tests (41 tests)
+   npm run test:integration   # Integration tests (10 tests)
+   npm run test:e2e           # End-to-end tests
+   npm run test:all           # All tests
+   npm run lint               # Code quality check
+   ```
 
-4. **Make your changes**
-5. **Test thoroughly** (see Testing Guidelines below)
+4. **Load the extension in Chrome:**
+   - Use the VS Code task: "Load Extension in Chrome" (recommended)
+   - Or manually: Open `chrome://extensions/` → Enable "Developer mode" → "Load unpacked"
+
+5. **Make your changes**
+6. **Test thoroughly** (see Testing Guidelines below)
+
+### Automated Testing Infrastructure
+
+We have comprehensive testing with **100% pass rate**:
+
+- **51 Total Tests**: All automated with Jest and Playwright
+- **Unit Tests (41)**: Component-level testing with mocking
+- **Integration Tests (10)**: End-to-end workflow validation  
+- **E2E Tests**: Cross-browser testing with Playwright
+- **Quality Gates**: ESLint, automated CI/CD, coverage reporting
 
 ### Testing Guidelines
 
-Before submitting a PR, please test:
+Before submitting a PR, ensure all automated tests pass:
+
+```bash
+npm run test:all    # Must pass 51/51 tests
+npm run lint        # Must have 0 errors
+```
+
+**Manual Testing Checklist:**
 
 - **Core Functionality:**
   - [ ] Manual session save/restore

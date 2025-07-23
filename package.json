@@ -4,11 +4,30 @@
   "description": "Browser extension that tracks and restores browsing sessions, tabs, windows, and scroll positions",
   "main": "background.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "echo \"No build process required for vanilla JavaScript extension\"",
-    "dev": "echo \"Load extension in Chrome Developer Mode from this directory\"",
-    "lint": "echo \"Consider adding ESLint for code quality\"",
-    "package": "zip -r session-guardian.zip . -x node_modules/\\* .git/\\* *.zip"
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "jest --config=jest.config.js",
+    "test:integration": "jest --config=jest.integration.config.js",
+    "test:e2e": "playwright test",
+    "test:chrome": "npm run test:e2e -- --project=chromium",
+    "test:firefox": "npm run test:e2e -- --project=firefox",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint . --ext .js --fix",
+    "lint:check": "eslint . --ext .js",
+    "validate:manifest": "node scripts/validate-manifest.js",
+    "validate:permissions": "node scripts/validate-permissions.js",
+    "build": "node scripts/build.js",
+    "build:production": "NODE_ENV=production npm run build",
+    "package": "npm run build && node scripts/package.js",
+    "dev": "npm run load-extension",
+    "load-extension": "echo \"Load extension in Chrome Developer Mode from this directory\"",
+    "watch": "nodemon --watch . --ext js,html,css,json --ignore node_modules --ignore dist --exec \"npm run build\"",
+    "deploy:chrome": "node scripts/deploy-chrome.js",
+    "clean": "rimraf dist/ coverage/ test-results/",
+    "setup": "node scripts/setup-dev.js",
+    "pretest": "npm run lint:check",
+    "prebuild": "npm run clean",
+    "postinstall": "npm run setup"
   },
   "keywords": [
     "browser-extension",
@@ -24,14 +43,28 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/session-guardian"
+    "url": "https://github.com/rheedwahn/session-guardian"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/session-guardian/issues"
+    "url": "https://github.com/rheedwahn/session-guardian/issues"
   },
-  "homepage": "https://github.com/yourusername/session-guardian#readme",
-  "devDependencies": {},
-  "dependencies": {},
+  "homepage": "https://github.com/rheedwahn/session-guardian#readme",
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@playwright/test": "^1.40.0",
+    "@types/chrome": "^0.0.251",
+    "@types/jest": "^29.5.8",
+    "archiver": "^6.0.1",
+    "babel-jest": "^30.0.5",
+    "chrome-webstore-upload": "^3.0.0",
+    "eslint": "^8.54.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jest-webextension-mock": "^3.8.9",
+    "nodemon": "^3.0.1",
+    "rimraf": "^5.0.5"
+  },
   "browser": {
     "chrome": ">=88.0"
   },
@@ -41,7 +74,7 @@
       "tabs",
       "windows",
       "storage",
-      "sessions", 
+      "sessions",
       "activeTab",
       "scripting"
     ]

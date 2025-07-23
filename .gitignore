@@ -1,6 +1,6 @@
 # Session Guardian Browser Extension - .gitignore
 
-# Node.js dependencies (if any future build tools are added)
+# Node.js dependencies
 node_modules/
 npm-debug.log*
 yarn-debug.log*
@@ -18,6 +18,13 @@ yarn.lock
 # Build outputs and distribution files
 dist/
 build/
+*.zip
+
+# Test outputs
+coverage/
+test-results/
+.nyc_output/
+.jest/
 *.zip
 *.crx
 *.pem

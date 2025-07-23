@@ -28,8 +28,6 @@ class ScrollTracker {
 
     // Initial scroll position
     this.updateScrollPosition();
-
-    console.log('Session Guardian: Content script initialized for', window.location.href);
   }
 
   onScroll() {
@@ -53,7 +51,7 @@ class ScrollTracker {
     const threshold = 50; // pixels
     if (Math.abs(currentPosition.x - this.lastScrollPosition.x) > threshold ||
         Math.abs(currentPosition.y - this.lastScrollPosition.y) > threshold) {
-      
+
       this.lastScrollPosition = currentPosition;
       this.saveScrollPosition();
     }
@@ -70,7 +68,7 @@ class ScrollTracker {
 
       // Store in session storage for quick access
       sessionStorage.setItem('sessionGuardian_scroll', JSON.stringify(scrollData));
-      
+
       // Also send to background script for persistence
       chrome.runtime.sendMessage({
         action: 'updateScrollPosition',
@@ -156,19 +154,19 @@ class SessionRestorer {
 
   handleMessage(request, sender, sendResponse) {
     switch (request.action) {
-      case 'getPageData':
-        sendResponse(window.scrollTracker.getPageData());
-        break;
-        
-      case 'restoreScrollPosition':
-        this.restoreScrollPosition(request.position);
-        sendResponse({ success: true });
-        break;
-        
-      case 'highlightPage':
-        this.highlightPageForSession();
-        sendResponse({ success: true });
-        break;
+    case 'getPageData':
+      sendResponse(window.scrollTracker.getPageData());
+      break;
+
+    case 'restoreScrollPosition':
+      this.restoreScrollPosition(request.position);
+      sendResponse({ success: true });
+      break;
+
+    case 'highlightPage':
+      this.highlightPageForSession();
+      sendResponse({ success: true });
+      break;
     }
   }
 
@@ -189,19 +187,19 @@ class SessionRestorer {
     // Check URL parameters for session restoration
     const urlParams = new URLSearchParams(window.location.search);
     const sessionRestore = urlParams.get('sessionGuardian');
-    
+
     if (sessionRestore) {
       try {
         const restoreData = JSON.parse(decodeURIComponent(sessionRestore));
         this.restoreScrollPosition(restoreData.scrollPosition);
-        
+
         // Remove the parameter from URL
         urlParams.delete('sessionGuardian');
-        const newUrl = window.location.pathname + 
-          (urlParams.toString() ? '?' + urlParams.toString() : '') + 
+        const newUrl = window.location.pathname +
+          (urlParams.toString() ? `?${urlParams.toString()}` : '') +
           window.location.hash;
         history.replaceState(null, '', newUrl);
-        
+
       } catch (error) {
         console.warn('Session Guardian: Failed to restore scroll position:', error);
       }
@@ -223,7 +221,7 @@ class SessionRestorer {
       pointer-events: none;
       animation: sessionSaveFlash 0.5s ease-out;
     `;
-    
+
     // Add CSS animation
     const style = document.createElement('style');
     style.textContent = `
@@ -233,10 +231,10 @@ class SessionRestorer {
         100% { opacity: 0; transform: scale(0.95); }
       }
     `;
-    
+
     document.head.appendChild(style);
     document.body.appendChild(overlay);
-    
+
     setTimeout(() => {
       overlay.remove();
       style.remove();
@@ -267,13 +265,13 @@ class FormDataTracker {
     const form = element.closest('form');
     const formId = this.getFormId(form);
     const fieldId = this.getFieldId(element);
-    
+
     if (!this.formData.has(formId)) {
       this.formData.set(formId, new Map());
     }
-    
+
     this.formData.get(formId).set(fieldId, element.value);
-    
+
     // Save to sessionStorage
     try {
       const formDataObj = {};
@@ -283,7 +281,7 @@ class FormDataTracker {
           formDataObj[fId][fieldId] = value;
         });
       });
-      
+
       sessionStorage.setItem('sessionGuardian_forms', JSON.stringify(formDataObj));
     } catch (error) {
       // Ignore storage errors
@@ -295,13 +293,13 @@ class FormDataTracker {
       const savedData = sessionStorage.getItem('sessionGuardian_forms');
       if (savedData) {
         const formDataObj = JSON.parse(savedData);
-        
+
         Object.keys(formDataObj).forEach(formId => {
           Object.keys(formDataObj[formId]).forEach(fieldId => {
             const element = document.querySelector(`[data-sg-field="${fieldId}"]`) ||
                            document.querySelector(`#${fieldId}`) ||
                            document.querySelector(`[name="${fieldId}"]`);
-            
+
             if (element && !element.value) {
               element.value = formDataObj[formId][fieldId];
             }
@@ -327,3 +325,8 @@ class FormDataTracker {
 window.scrollTracker = new ScrollTracker();
 window.sessionRestorer = new SessionRestorer();
 window.formDataTracker = new FormDataTracker();
+
+// Export for testing
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { ScrollTracker, SessionRestorer, FormDataTracker };
+}

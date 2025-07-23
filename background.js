@@ -13,19 +13,17 @@ class SessionManager {
   }
 
   async init() {
-    console.log('Session Guardian: Background script initialized');
-    
     // Start auto-save timer
     this.startAutoSave();
-    
+
     // Listen for extension startup (potential crash recovery)
     chrome.runtime.onStartup.addListener(() => this.handleStartup());
     chrome.runtime.onInstalled.addListener(() => this.handleInstall());
-    
+
     // Listen for window/tab changes
     chrome.tabs.onCreated.addListener(() => this.onTabChange());
     chrome.tabs.onRemoved.addListener(() => this.onTabChange());
-    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    chrome.tabs.onUpdated.addListener((tabId, changeInfo, _tab) => {
       // Only update on significant changes
       if (changeInfo.url || changeInfo.title || changeInfo.status === 'complete') {
         this.onTabChange();
@@ -36,7 +34,6 @@ class SessionManager {
   }
 
   async handleStartup() {
-    console.log('Session Guardian: Browser startup detected');
     // Check if this was an unexpected shutdown
     const lastSession = await this.getLastAutoSave();
     if (lastSession && this.wasUnexpectedShutdown(lastSession)) {
@@ -46,7 +43,6 @@ class SessionManager {
   }
 
   async handleInstall() {
-    console.log('Session Guardian: Extension installed/updated');
     // Create initial session
     await this.saveCurrentSession('Initial Session', true);
   }
@@ -67,8 +63,8 @@ class SessionManager {
     if (this.autoSaveTimer) {
       clearInterval(this.autoSaveTimer);
     }
-    
-    this.autoSaveTimer = setInterval(async () => {
+
+    this.autoSaveTimer = setInterval(async() => {
       await this.autoSaveCurrentSession();
     }, AUTO_SAVE_INTERVAL);
   }
@@ -76,7 +72,6 @@ class SessionManager {
   async autoSaveCurrentSession() {
     try {
       await this.saveCurrentSession('Auto-save', true);
-      console.log('Session Guardian: Auto-save completed');
     } catch (error) {
       console.error('Session Guardian: Auto-save failed:', error);
     }
@@ -137,7 +132,7 @@ class SessionManager {
           active: tab.active,
           index: tab.index,
           favIconUrl: tab.favIconUrl,
-          scrollPosition: scrollPosition
+          scrollPosition
         };
 
         windowData.tabs.push(tabData);
@@ -151,7 +146,7 @@ class SessionManager {
 
   async saveSession(session) {
     const sessions = await this.getAllSessions();
-    
+
     // Remove old auto-save if this is a new auto-save
     if (session.type === 'auto') {
       const filteredSessions = sessions.filter(s => s.type !== 'auto');
@@ -190,14 +185,14 @@ class SessionManager {
     try {
       const sessions = await this.getAllSessions();
       const session = sessions.find(s => s.id === sessionId);
-      
+
       if (!session) {
         throw new Error('Session not found');
       }
 
       // Close current windows (optional - ask user)
       // const currentWindows = await chrome.windows.getAll();
-      
+
       // Restore windows and tabs
       for (const windowData of session.windows) {
         const windowOptions = {
@@ -254,10 +249,10 @@ class SessionManager {
 
     try {
       // Wait a bit for the page to load
-      setTimeout(async () => {
+      setTimeout(async() => {
         try {
           await chrome.scripting.executeScript({
-            target: { tabId: tabId },
+            target: { tabId },
             func: (pos) => window.scrollTo(pos.x, pos.y),
             args: [scrollPosition]
           });
@@ -301,9 +296,9 @@ class SessionManager {
     if (this.updateTimer) {
       clearTimeout(this.updateTimer);
     }
-    
+
     // Set new timer to update auto-save after 2 seconds of inactivity
-    this.updateTimer = setTimeout(async () => {
+    this.updateTimer = setTimeout(async() => {
       try {
         await this.updateAutoSaveSession();
       } catch (error) {
@@ -316,21 +311,19 @@ class SessionManager {
     // Update the auto-save session with current state
     const sessions = await this.getAllSessions();
     const autoSaveIndex = sessions.findIndex(s => s.type === 'auto');
-    
+
     if (autoSaveIndex !== -1) {
       // Update existing auto-save session
       const windows = await chrome.windows.getAll({ populate: true });
       const updatedSession = await this.createSessionData(windows, 'Auto-save', true);
       updatedSession.id = sessions[autoSaveIndex].id; // Keep same ID
-      
+
       sessions[autoSaveIndex] = updatedSession;
       await this.saveSessions(sessions);
-      
-      console.log('Session Guardian: Auto-save session updated');
     }
   }
 
-  async handleScrollUpdate(scrollData) {
+  async handleScrollUpdate(_scrollData) {
     // Store scroll position for later use in session updates
     // This could be enhanced to immediately update the auto-save session
     // For now, we rely on the debounced update mechanism
@@ -343,42 +336,42 @@ const sessionManager = new SessionManager();
 
 // Listen for messages from popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  (async () => {
+  (async() => {
     try {
       switch (request.action) {
-        case 'saveSession':
-          const session = await sessionManager.saveCurrentSession(request.name);
-          sendResponse({ success: true, session });
-          break;
-          
-        case 'getAllSessions':
-          const sessions = await sessionManager.getAllSessions();
-          sendResponse({ success: true, sessions });
-          break;
-          
-        case 'restoreSession':
-          await sessionManager.restoreSession(request.sessionId);
-          sendResponse({ success: true });
-          break;
-          
-        case 'deleteSession':
-          await sessionManager.deleteSession(request.sessionId);
-          sendResponse({ success: true });
-          break;
-          
-        case 'updateScrollPosition':
-          // Handle scroll position updates from content script
-          await sessionManager.handleScrollUpdate(request.data);
-          sendResponse({ success: true });
-          break;
-          
-        default:
-          sendResponse({ success: false, error: 'Unknown action' });
+      case 'saveSession': {
+        const session = await sessionManager.saveCurrentSession(request.name);
+        sendResponse({ success: true, session });
+        break;
+      }
+      case 'getAllSessions': {
+        const sessions = await sessionManager.getAllSessions();
+        sendResponse({ success: true, sessions });
+        break;
+      }
+      case 'restoreSession': {
+        await sessionManager.restoreSession(request.sessionId);
+        sendResponse({ success: true });
+        break;
+      }
+      case 'deleteSession': {
+        await sessionManager.deleteSession(request.sessionId);
+        sendResponse({ success: true });
+        break;
+      }
+      case 'updateScrollPosition': {
+        // Handle scroll position updates from content script
+        await sessionManager.handleScrollUpdate(request.data);
+        sendResponse({ success: true });
+        break;
+      }
+      default:
+        sendResponse({ success: false, error: 'Unknown action' });
       }
     } catch (error) {
       sendResponse({ success: false, error: error.message });
     }
   })();
-  
+
   return true; // Keep message channel open for async response
 });

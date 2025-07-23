@@ -57,7 +57,7 @@ class PopupManager {
 
   async saveSession() {
     const sessionName = document.getElementById('session-name').value.trim();
-    
+
     if (!sessionName) {
       this.showError('Please enter a session name');
       return;
@@ -65,7 +65,7 @@ class PopupManager {
 
     try {
       this.setLoading(true);
-      
+
       const response = await this.sendMessage({
         action: 'saveSession',
         name: sessionName
@@ -89,7 +89,7 @@ class PopupManager {
     try {
       this.setLoading(true);
       this.hideMessages();
-      
+
       const response = await this.sendMessage({
         action: 'getAllSessions'
       });
@@ -112,10 +112,10 @@ class PopupManager {
     const emptyState = document.getElementById('empty-state');
     const sessionCount = document.getElementById('session-count');
     const lastUpdate = document.getElementById('last-update');
-    
+
     // Update session count
     sessionCount.textContent = `(${this.sessions.length})`;
-    
+
     // Show last update time for auto-save session
     const autoSaveSession = this.sessions.find(s => s.type === 'auto');
     if (autoSaveSession) {
@@ -126,7 +126,7 @@ class PopupManager {
       lastUpdate.textContent = 'No auto-save yet';
       lastUpdate.style.color = '#999';
     }
-    
+
     if (this.sessions.length === 0) {
       container.classList.add('hidden');
       emptyState.classList.remove('hidden');
@@ -135,9 +135,9 @@ class PopupManager {
 
     container.classList.remove('hidden');
     emptyState.classList.add('hidden');
-    
+
     container.innerHTML = '';
-    
+
     this.sessions.forEach(session => {
       const sessionElement = this.createSessionElement(session);
       container.appendChild(sessionElement);
@@ -147,11 +147,11 @@ class PopupManager {
   createSessionElement(session) {
     const div = document.createElement('div');
     div.className = 'session-item';
-    
+
     const windowCount = session.windows.length;
     const tabCount = session.windows.reduce((total, window) => total + window.tabs.length, 0);
     const timeAgo = this.getTimeAgo(session.timestamp);
-    
+
     div.innerHTML = `
       <div class="session-header">
         <h3 class="session-name">${this.escapeHtml(session.name)}</h3>
@@ -176,21 +176,21 @@ class PopupManager {
         ` : ''}
       </div>
     `;
-    
+
     // Bind events
     const restoreBtn = div.querySelector('.btn-restore');
     const deleteBtn = div.querySelector('.btn-delete');
-    
+
     restoreBtn.addEventListener('click', () => {
       this.restoreSession(session.id);
     });
-    
+
     if (deleteBtn) {
       deleteBtn.addEventListener('click', () => {
         this.deleteSession(session.id);
       });
     }
-    
+
     return div;
   }
 
@@ -201,10 +201,10 @@ class PopupManager {
 
     try {
       this.setLoading(true);
-      
+
       const response = await this.sendMessage({
         action: 'restoreSession',
-        sessionId: sessionId
+        sessionId
       });
 
       if (response.success) {
@@ -227,10 +227,10 @@ class PopupManager {
 
     try {
       this.setLoading(true);
-      
+
       const response = await this.sendMessage({
         action: 'deleteSession',
-        sessionId: sessionId
+        sessionId
       });
 
       if (response.success) {
@@ -250,7 +250,7 @@ class PopupManager {
     this.isLoading = loading;
     const loadingElement = document.getElementById('loading');
     const container = document.getElementById('sessions-container');
-    
+
     if (loading) {
       loadingElement.classList.remove('hidden');
       container.classList.add('hidden');
@@ -267,7 +267,7 @@ class PopupManager {
     const errorElement = document.getElementById('error-message');
     errorElement.textContent = message;
     errorElement.classList.remove('hidden');
-    
+
     setTimeout(() => {
       this.hideMessages();
     }, 5000);
@@ -278,7 +278,7 @@ class PopupManager {
     const successElement = document.getElementById('success-message');
     successElement.textContent = message;
     successElement.classList.remove('hidden');
-    
+
     setTimeout(() => {
       this.hideMessages();
     }, 3000);
@@ -292,11 +292,11 @@ class PopupManager {
   getTimeAgo(timestamp) {
     const now = Date.now();
     const diff = now - timestamp;
-    
+
     const minutes = Math.floor(diff / (1000 * 60));
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    
+
     if (minutes < 1) return 'just now';
     if (minutes < 60) return `${minutes}m ago`;
     if (hours < 24) return `${hours}h ago`;
@@ -316,7 +316,7 @@ class PopupManager {
         this.loadSessions();
       }
     }, 30000);
-    
+
     // Clear timer when popup is closed
     window.addEventListener('beforeunload', () => {
       if (this.refreshTimer) {
