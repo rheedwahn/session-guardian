@@ -33,7 +33,7 @@ We welcome feature suggestions! Please:
 1. **Fork the repository**
 2. **Clone your fork:**
    ```bash
-   git clone https://github.com/yourusername/session-guardian.git
+   git clone https://github.com/rheedwahn/session-guardian.git
    cd session-guardian
    ```
 
