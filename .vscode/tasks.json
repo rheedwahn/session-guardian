@@ -1,0 +1,16 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Load Extension in Chrome",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"Session Guardian Extension Ready!\n\nTo test the extension:\n1. Open Chrome and go to chrome://extensions/\n2. Enable 'Developer mode' (top right toggle)\n3. Click 'Load unpacked' and select this directory: /Users/iridwan/opensource-ideas\n4. The Session Guardian extension should appear in your extensions\n5. Pin it to the toolbar for easy access\n\nFeatures to test:\n- Auto-save (wait 5+ minutes)\n- Manual session save via popup\n- Session restoration\n- Scroll position tracking\n- Crash recovery (kill Chrome process)\n\nAll files are ready for development!"
+			],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": []
+		}
+	]
+}

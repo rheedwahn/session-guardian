@@ -1,0 +1,49 @@
+{
+  "name": "session-guardian",
+  "version": "1.0.0",
+  "description": "Browser extension that tracks and restores browsing sessions, tabs, windows, and scroll positions",
+  "main": "background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo \"No build process required for vanilla JavaScript extension\"",
+    "dev": "echo \"Load extension in Chrome Developer Mode from this directory\"",
+    "lint": "echo \"Consider adding ESLint for code quality\"",
+    "package": "zip -r session-guardian.zip . -x node_modules/\\* .git/\\* *.zip"
+  },
+  "keywords": [
+    "browser-extension",
+    "chrome-extension",
+    "session-management",
+    "tab-management",
+    "crash-recovery",
+    "scroll-position",
+    "bookmark",
+    "productivity"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/session-guardian"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/session-guardian/issues"
+  },
+  "homepage": "https://github.com/yourusername/session-guardian#readme",
+  "devDependencies": {},
+  "dependencies": {},
+  "browser": {
+    "chrome": ">=88.0"
+  },
+  "extensionManifest": {
+    "version": 3,
+    "permissions": [
+      "tabs",
+      "windows",
+      "storage",
+      "sessions", 
+      "activeTab",
+      "scripting"
+    ]
+  }
+}

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 350px;
+      min-height: 400px;
+      margin: 0;
+      padding: 16px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 14px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 15px;
+    }
+    
+    .header h1 {
+      margin: 0;
+      font-size: 18px;
+      color: #333;
+    }
+    
+    .header p {
+      margin: 5px 0 0 0;
+      color: #666;
+      font-size: 12px;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+    
+    .btn-primary {
+      background-color: #4285f4;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #3367d6;
+    }
+    
+    .btn-secondary {
+      background-color: #f8f9fa;
+      color: #333;
+      border: 1px solid #dadce0;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #f1f3f4;
+    }
+    
+    .sessions-section {
+      margin-top: 20px;
+    }
+    
+    .section-title {
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .sessions-list {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .session-item {
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 8px;
+      background-color: #fafafa;
+      transition: background-color 0.2s;
+    }
+    
+    .session-item:hover {
+      background-color: #f0f0f0;
+    }
+    
+    .session-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    
+    .session-name {
+      font-weight: 500;
+      color: #333;
+      margin: 0;
+      font-size: 13px;
+    }
+    
+    .session-type {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 10px;
+      color: white;
+      font-weight: 500;
+    }
+    
+    .session-type.auto {
+      background-color: #34a853;
+    }
+    
+    .session-type.manual {
+      background-color: #4285f4;
+    }
+    
+    .session-type.crash_recovery {
+      background-color: #ea4335;
+    }
+    
+    .session-info {
+      font-size: 11px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    
+    .session-stats {
+      display: flex;
+      gap: 15px;
+      font-size: 11px;
+      color: #666;
+      margin-bottom: 10px;
+    }
+    
+    .session-actions {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .btn-small {
+      padding: 6px 12px;
+      font-size: 11px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    
+    .btn-restore {
+      background-color: #34a853;
+      color: white;
+    }
+    
+    .btn-restore:hover {
+      background-color: #2d7d43;
+    }
+    
+    .btn-delete {
+      background-color: #ea4335;
+      color: white;
+    }
+    
+    .btn-delete:hover {
+      background-color: #d33b2c;
+    }
+    
+    .empty-state {
+      text-align: center;
+      color: #666;
+      font-style: italic;
+      padding: 20px;
+    }
+    
+    .loading {
+      text-align: center;
+      color: #666;
+      padding: 20px;
+    }
+    
+    .error {
+      background-color: #fce8e6;
+      border: 1px solid #f28b82;
+      color: #d93025;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+    
+    .success {
+      background-color: #e6f4ea;
+      border: 1px solid #81c995;
+      color: #1e8e3e;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+    
+    .save-form {
+      margin-bottom: 15px;
+    }
+    
+    .form-group {
+      margin-bottom: 10px;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 4px;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      font-size: 13px;
+      box-sizing: border-box;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: #4285f4;
+    }
+    
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Session Guardian</h1>
+    <p>Save and restore browser sessions</p>
+  </div>
+  
+  <div id="error-message" class="error hidden"></div>
+  <div id="success-message" class="success hidden"></div>
+  
+  <div class="action-buttons">
+    <button id="save-session-btn" class="btn btn-primary">Save Session</button>
+    <button id="refresh-btn" class="btn btn-secondary">Refresh</button>
+  </div>
+  
+  <div id="save-form" class="save-form hidden">
+    <div class="form-group">
+      <label class="form-label" for="session-name">Session Name</label>
+      <input type="text" id="session-name" class="form-input" placeholder="Enter session name..." />
+    </div>
+    <div class="action-buttons">
+      <button id="save-confirm-btn" class="btn btn-primary">Save</button>
+      <button id="save-cancel-btn" class="btn btn-secondary">Cancel</button>
+    </div>
+  </div>
+  
+  <div class="sessions-section">
+    <div class="section-title">
+      <span>Saved Sessions</span>
+      <span id="session-count" style="font-size: 11px; color: #666;"></span>
+    </div>
+    
+    <div id="loading" class="loading">Loading sessions...</div>
+    <div id="sessions-container" class="sessions-list hidden"></div>
+    <div id="empty-state" class="empty-state hidden">
+      No saved sessions yet.<br>
+      Click "Save Session" to create your first session.
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
