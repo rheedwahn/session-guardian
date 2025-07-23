@@ -149,6 +149,6 @@ Currently targeting:
 
 - Check existing [Issues](https://github.com/rheedwahn/session-guardian/issues)
 - Start a [Discussion](https://github.com/rheedwahn/session-guardian/discussions)
-- Review the [README](README.md) for basic information
+- Review the [README](https://github.com/rheedwahn/session-guardian/README.md) for basic information
 
 Thank you for contributing to Session Guardian! 🎉
