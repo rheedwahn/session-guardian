@@ -219,3 +219,9 @@ store-assets/screenshot-5-session-list.svg
 store-assets/small-promo-tile.html
 store-assets/small-promo-tile.svg
 store-assets/SUBMISSION-CHECKLIST.md
+scripts/setup-chrome-credentials.js
+scripts/extract-credentials.js
+scripts/get-refresh-token.js
+scripts/troubleshoot-credentials.js
+scripts/fix-oauth-verification.js
+scripts/get-refresh-token-new.js
