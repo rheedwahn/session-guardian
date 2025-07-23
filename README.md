@@ -25,12 +25,15 @@ A powerful browser extension that automatically tracks and restores your browsin
 ## 🛠️ Installation
 
 ### For Users (Production Ready)
+
+#### Option 1: Chrome Web Store (Recommended)
+*Chrome Web Store submission ready - pending final contact email setup*
+
+#### Option 2: Manual Installation (Developer Mode)
 1. **Download**: Clone or download this repository
 2. **Load Extension**: Open Chrome → `chrome://extensions/` → Enable "Developer mode" → "Load unpacked"
 3. **Select Directory**: Choose the session-guardian folder
 4. **Ready**: The Session Guardian icon will appear in your toolbar
-
-*Chrome Web Store listing coming soon for easier installation*
 
 ### For Developers
 ```bash
