@@ -147,8 +147,8 @@ Currently targeting:
 
 ## Questions?
 
-- Check existing [Issues](https://github.com/yourusername/session-guardian/issues)
-- Start a [Discussion](https://github.com/yourusername/session-guardian/discussions)
+- Check existing [Issues](https://github.com/rheedwahn/session-guardian/issues)
+- Start a [Discussion](https://github.com/rheedwahn/session-guardian/discussions)
 - Review the [README](README.md) for basic information
 
 Thank you for contributing to Session Guardian! 🎉
